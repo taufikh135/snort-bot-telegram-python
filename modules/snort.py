@@ -39,6 +39,8 @@ class Snort:
             if self.__currLog > self.__prevLog:
                 print("Serangan terdeteksi.")
                 
+                # self.__firewall.blockIP()
+                
                 # ambil semua log penyerangan terbaru
                 for i in range(self.__prevLog, self.__currLog):
                     message += f'\n{self.__getLogByIndex(i)}'
