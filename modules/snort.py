@@ -29,6 +29,9 @@ class Snort:
             # get data jumlah data log terbaru mas=
             self.__currLog = self.__getLogCount()
             
+            print('prev:', self.__prevLog)
+            print('curr:', self.__currLog)
+            
             # pesan notifikasi
             message = 'Hallo Tim Cyber Security. Saat ini terjadi penyerangan pada server.\n'
             
@@ -44,7 +47,10 @@ class Snort:
                 self.__telegram.sendMessage(chatId=self.__TelegramChatID, message=message)
                     
                 # perbarui log sebelumnya
-                self.__prevLog += self.__currLog
+                self.__prevLog = self.__currLog
+            
+            if self.__currLog < self.__prevLog:
+                self.__prevLog = self.__currLog
                 
             # istirahat 2 detik
             sleep(2)
