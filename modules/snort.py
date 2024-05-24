@@ -30,15 +30,15 @@ class Snort:
             self.__currLog = self.__getLogCount()
             
             # pesan notifikasi
-            message = 'Hallo Tim Cyber Security. Saat ini terjadi penyerangan pada server.'
+            message = 'Hallo Tim Cyber Security. Saat ini terjadi penyerangan pada server.\n'
             
             # cek jika terdapat penyerangan
             if self.__currLog > self.__prevLog:
-                print('Serangan terdeteksi.')
+                print("Serangan terdeteksi.")
                 
                 # ambil semua log penyerangan terbaru
                 for i in range(self.__prevLog, self.__currLog):
-                    message += '\n' + self.__getLogByIndex(i)
+                    message += f'\n{self.__getLogByIndex(i)}'
                 
                 # kirimkan pesan ke telegram
                 self.__telegram.sendMessage(chatId=self.__TelegramChatID, message=message)
