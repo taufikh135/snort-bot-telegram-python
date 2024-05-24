@@ -3,10 +3,10 @@ from modules.snort import Snort
 from modules.telegram import Telegram
 
 # Configurasi
-logFile = "snort-log.txt"
+logFile = "snort-alert.log"
 telegramConfig = {
     "apiKey": "", # API Key Telegram
-    "chatId": 0 # Chat ID Telegram
+    "chatId": -4244121384 # Chat ID Telegram
 }
 
 # Dependecies yang dibutuhkan
