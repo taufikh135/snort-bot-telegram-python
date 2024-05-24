@@ -3,7 +3,7 @@ from modules.snort import Snort
 from modules.telegram import Telegram
 
 # Configurasi
-logFile = "snort-alert.log"
+logFile = "/var/log/snort/snort.alert.fast"
 telegramConfig = {
     "apiKey": "", # API Key Telegram
     "chatId": -4244121384 # Chat ID Telegram
@@ -20,4 +20,4 @@ snort = Snort(logFile=logFile, telegram=telegram, firewall=firewall)
 snort.setTelegramChatID(telegramConfig["chatId"])
 
 # Analisis Log
-snort.analyze(ips=False)
+snort.analyze(ips=True)

@@ -1,6 +1,7 @@
 from time import sleep
 from modules.telegram import Telegram
 from modules.firewall import Firewall
+import re
     
 class Snort:    
     def __init__(self, logFile: str, telegram: Telegram, firewall: Firewall) -> None:
@@ -23,14 +24,17 @@ class Snort:
     def __getLogByIndex(self, index: int) -> str:
         return self.__getAllLog()[index]
     
+    def __parseIPAttacker(self, log: str) -> str:
+        pattern = re.compile(r' ([0-9]{1,3}.[0-9]{1,3}.[1-9]{1,3}.[1-9]{1,3}):[0-9]{1,5} ->')
+        result = pattern.search(log)
+        ip = result.group(1)
+        return ip
+    
     def analyze(self, ips: bool = False) -> None:
         # infinit loop untuk pengecekan
         while True:
             # get data jumlah data log terbaru mas=
             self.__currLog = self.__getLogCount()
-            
-            print('prev:', self.__prevLog)
-            print('curr:', self.__currLog)
             
             # pesan notifikasi
             message = 'Hallo Tim Cyber Security. Saat ini terjadi penyerangan pada server.\n'
@@ -39,11 +43,16 @@ class Snort:
             if self.__currLog > self.__prevLog:
                 print("Serangan terdeteksi.")
                 
-                # self.__firewall.blockIP()
-                
                 # ambil semua log penyerangan terbaru
                 for i in range(self.__prevLog, self.__currLog):
-                    message += f'\n\n{self.__getLogByIndex(i)}'
+                    log = self.__getLogByIndex(i)
+                    
+                    if ips:
+                        ip = self.__parseIPAttacker(log)
+                        print(ip)
+                        # self.__firewall.blockIP(ip)
+                        
+                    message += f'\n\n{log}'
                 
                 # kirimkan pesan ke telegram
                 self.__telegram.sendMessage(chatId=self.__TelegramChatID, message=message)
