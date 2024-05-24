@@ -8,6 +8,7 @@ telegramConfig = {
     "apiKey": "", # API Key Telegram
     "chatId": -4244121384 # Chat ID Telegram
 }
+ips = True
 
 # Dependecies yang dibutuhkan
 telegram = Telegram(telegramConfig["apiKey"])
@@ -20,4 +21,4 @@ snort = Snort(logFile=logFile, telegram=telegram, firewall=firewall)
 snort.setTelegramChatID(telegramConfig["chatId"])
 
 # Analisis Log
-snort.analyze(ips=True)
+snort.analyze(ips)

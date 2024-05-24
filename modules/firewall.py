@@ -1,20 +1,17 @@
 import subprocess
 
-class Firewall:
-    __whitelistIP = []
-    
+class Firewall:    
     def __command(self, command: str) -> str:
-        return subprocess.run(command, capture_output=True, text=True).stdout
+        return subprocess.check_output(command, shell=True, text=True)
     
     def blockIP(self, ip: str) -> str:
         if ip in self.__whitelistIP:
             return "IP already whitelisted"
         
-        return self.__command(f"iptables -s {ip} -j DROP")
+        return self.__command(f"iptables -I INPUT -s {ip} -j DROP")
     
+    def removeBlockIP(self, ip: str) -> str:
+        return self.__command(f"iptables -D INPUT -s {ip} -j DROP")
+        
     def allowIP(self, ip: str) -> None:
-        return self.__command(f"iptables -s {ip} -j ACCEPT")
-    
-    def addWhitelistIP(self, ip: str) -> None:
-        self.__whitelistIP.append(ip)
-        self.allowIP(ip)
+        return self.__command(f"iptables -I INPUT -s {ip} -j ACCEPT")

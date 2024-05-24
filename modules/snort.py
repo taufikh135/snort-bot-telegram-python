@@ -49,8 +49,7 @@ class Snort:
                     
                     if ips:
                         ip = self.__parseIPAttacker(log)
-                        print(ip)
-                        # self.__firewall.blockIP(ip)
+                        self.__firewall.blockIP(ip)
                         
                     message += f'\n\n{log}'
                 
