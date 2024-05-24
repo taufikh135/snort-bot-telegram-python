@@ -43,7 +43,7 @@ class Snort:
                 
                 # ambil semua log penyerangan terbaru
                 for i in range(self.__prevLog, self.__currLog):
-                    message += f'\n{self.__getLogByIndex(i)}'
+                    message += f'\n\n{self.__getLogByIndex(i)}'
                 
                 # kirimkan pesan ke telegram
                 self.__telegram.sendMessage(chatId=self.__TelegramChatID, message=message)
