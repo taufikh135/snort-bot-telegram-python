@@ -4,15 +4,10 @@ from modules.firewall import Firewall
 import re
     
 class Snort:    
-    def __init__(self, logFile: str, telegram: Telegram, firewall: Firewall) -> None:
+    def __init__(self, logFile: str) -> None:
         self.__logFile = logFile
         self.__prevLog = self.__getLogCount()
         self.__currLog = self.__prevLog
-        self.__telegram = telegram
-        self.__firewall = firewall
-        
-    def setTelegramChatID(self, chatId: int) -> None:
-        self.__TelegramChatID = chatId
         
     def __getAllLog(self) -> list:
         with open(self.__logFile, "r") as file:
@@ -29,37 +24,29 @@ class Snort:
         result = re.findall(regex, log)
         return result[0]
     
-    def analyze(self, ips: bool = False) -> None:
+    def analyze(self, callback) -> None:
+        ''' @param callback: def (logs: [{log, ipAttacker}]) -> None '''
+        
         # infinit loop untuk pengecekan
         while True:
             # get data jumlah data log terbaru mas=
             self.__currLog = self.__getLogCount()
-            
-            # pesan notifikasi
-            message = 'Hallo Tim Cyber Security. Saat ini terjadi penyerangan pada server.\n'
-            
+                        
             # cek jika terdapat penyerangan
             if self.__currLog > self.__prevLog:
-                print("Serangan terdeteksi.")
-                
-                # ambil semua log penyerangan terbaru
+                logs = []
                 for i in range(self.__prevLog, self.__currLog):
                     log = self.__getLogByIndex(i)
+                    ipAttacker = self.__parseIPAttacker(log)
                     
-                    if ips:
-                        ip = self.__parseIPAttacker(log)
-                        self.__firewall.blockIP(ip)
-                        
-                    message += f'\n\n{log}'
-                
-                # kirimkan pesan ke telegram
-                self.__telegram.sendMessage(chatId=self.__TelegramChatID, message=message)
+                    logs.append({ 
+                        'log': log, 
+                        'ipAttacker': ipAttacker 
+                    })
                     
-                # perbarui log sebelumnya
-                self.__prevLog = self.__currLog
-            
-            if self.__currLog < self.__prevLog:
-                self.__prevLog = self.__currLog
+                callback(logs)
+                    
+            self.__prevLog = self.__currLog
                 
             # istirahat 2 detik
             sleep(2)

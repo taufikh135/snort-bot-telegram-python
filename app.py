@@ -8,17 +8,26 @@ telegramConfig = {
     "apiKey": "", # API Key Telegram
     "chatId": -4244121384 # Chat ID Telegram
 }
-ips = True
+ips = False
 
-# Dependecies yang dibutuhkan
+# Inisialisasi class module
+snort = Snort(logFile)
 telegram = Telegram(telegramConfig["apiKey"])
 firewall = Firewall()
 
-# Inisialisasi class snort dan menginject dependencies yang dibutuhkan
-snort = Snort(logFile=logFile, telegram=telegram, firewall=firewall)
-
-# Set Chat ID Telegram untuk notifikasi
-snort.setTelegramChatID(telegramConfig["chatId"])
-
+def callback(logs: list) -> None:
+    message = 'Hallo Tim Cyber Security. Saat ini terdeteksi penerangan pada Server.\n'
+    
+    for log in logs:
+        logMessage: str = log['log']
+        ipAttacker: str = log['ipAttacker']
+        
+        if ips:
+            firewall.blockIP(ipAttacker)
+        
+        message += '\n\n' + logMessage
+        
+    telegram.sendMessage(telegramConfig["chatId"], message)
+    
 # Analisis Log
-snort.analyze(ips)
+snort.analyze(callback)
