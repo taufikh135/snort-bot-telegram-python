@@ -25,10 +25,9 @@ class Snort:
         return self.__getAllLog()[index]
     
     def __parseIPAttacker(self, log: str) -> str:
-        pattern = re.compile(r'([0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3})')
-        result = pattern.search(log)
-        ip = result.group(1)
-        return ip
+        regex = r'([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})'
+        result = re.findall(regex, log)
+        return result[0]
     
     def analyze(self, ips: bool = False) -> None:
         # infinit loop untuk pengecekan
