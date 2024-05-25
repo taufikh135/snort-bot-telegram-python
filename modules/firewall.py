@@ -18,5 +18,5 @@ class Firewall:
     def removeBlockIP(self, ip: str) -> None:
         self.__command(f"sudo iptables -D INPUT -s {ip} -j DROP")
         
-    def allowIP(self, ip: str) -> None:
+    def whitelistIP(self, ip: str) -> None:
         return self.__command(f"sudo iptables -I INPUT -s {ip} -j ACCEPT")
