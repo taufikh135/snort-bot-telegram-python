@@ -27,7 +27,6 @@ class Snort:
     def __parseIPAttacker(self, log: str) -> str:
         pattern = re.compile(r'([0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3})')
         result = pattern.search(log)
-        print(result.group(1))
         ip = result.group(1)
         return ip
     
