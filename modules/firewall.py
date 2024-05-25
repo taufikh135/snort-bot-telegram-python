@@ -1,13 +1,15 @@
 import subprocess
 
-class Firewall:    
-    __blockedIP = []
-    
+class Firewall:        
     def __command(self, command: str) -> str:
         return subprocess.check_output(command, shell=True, text=True)
     
+    def __checkBlocked(self, ip: str) -> bool:
+        result = self.__command(f"sudo iptables -S INPUT | grep {ip}/")
+        return len(result) > 0
+    
     def blockIP(self, ip: str) -> None:  
-        if ip in self.__blockedIP: 
+        if not self.__checkBlocked(ip):
             return
               
         self.__command(f"sudo iptables -I INPUT -s {ip} -j DROP")
