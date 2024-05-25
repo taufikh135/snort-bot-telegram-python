@@ -9,7 +9,7 @@ class Firewall:
         return len(result) > 0
     
     def blockIP(self, ip: str) -> None:  
-        if not self.__checkBlocked(ip):
+        if self.__checkBlocked(ip):
             return
               
         self.__command(f"sudo iptables -I INPUT -s {ip} -j DROP")
